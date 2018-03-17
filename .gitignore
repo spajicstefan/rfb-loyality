@@ -1,7 +1,7 @@
 ######################
 # Project Specific
 ######################
-/target/www/**
+/build/www/**
 /src/test/javascript/coverage/
 /src/test/javascript/PhantomJS*/
 
@@ -12,7 +12,6 @@
 node_tmp/
 node_modules/
 npm-debug.log.*
-/.awcache/*
 
 ######################
 # SASS
@@ -117,7 +116,7 @@ Desktop.ini
 ######################
 # Logs
 ######################
-*.log*
+*.log
 
 ######################
 # Others
@@ -141,3 +140,5 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+/out/
+out/production/resources/

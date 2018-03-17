@@ -13,7 +13,7 @@ const ENV = 'development';
 module.exports = webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'eval-source-map',
     devServer: {
-        contentBase: './target/www',
+        contentBase: './build/www',
         proxy: [{
             context: [
                 /* jhipster-needle-add-entity-to-webpack - JHipster will add entity api paths here */
@@ -21,15 +21,11 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
                 '/management',
                 '/swagger-resources',
                 '/v2/api-docs',
-                '/h2-console',
-                '/auth'
+                '/h2-console'
             ],
             target: 'http://127.0.0.1:8080',
             secure: false
-        }],
-        watchOptions: {
-            ignored: /node_modules/
-        }
+        }]
     },
     entry: {
         polyfills: './src/main/webapp/app/polyfills',
@@ -37,7 +33,7 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
         main: './src/main/webapp/app/app.main'
     },
     output: {
-        path: utils.root('target/www'),
+        path: utils.root('build/www'),
         filename: 'app/[name].bundle.js',
         chunkFilename: 'app/[id].chunk.js'
     },

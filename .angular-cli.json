@@ -4,8 +4,8 @@
         "name": "rfbloyalty"
     },
     "apps": [{
-        "root": "src/main/webapp",
-        "outDir": "target/www/app",
+        "root": "src/main/webapp/",
+        "outDir": "build/www/app",
         "assets": [
             "content",
             "favicon.ico"
@@ -13,7 +13,7 @@
         "index": "index.html",
         "main": "app/app.main.ts",
         "polyfills": "app/polyfills.ts",
-        "test": "src/test/javascript/spec/entry.ts",
+        "test": "",
         "tsconfig": "../../../tsconfig.json",
         "prefix": "jhi",
         "mobile": false,
@@ -40,20 +40,13 @@
         "prefixInterfaces": false,
         "component" : {
             "inlineStyle" : true,
-            "inlineTemplate": false,
-            "spec": false
+            "inlineTemplate": false
         },
-        "directive" : {
-            "spec": false
-        },
-        "guard" : {
-            "spec": false
-        },
-        "pipe" : {
-            "spec": false
-        },
-        "service" : {
-            "spec": false
+        "spec": {
+            "component": false,
+            "directive": false,
+            "pipe": false,
+            "service": false
         }
     },
     "packageManager": "yarn"

@@ -2,9 +2,8 @@ const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const Visualizer = require('webpack-visualizer-plugin');
+const ngcWebpack = require('ngc-webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
-const AngularCompilerPlugin = require('@ngtools/webpack').AngularCompilerPlugin;
 const path = require('path');
 
 const utils = require('./utils.js');
@@ -20,17 +19,26 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     entry: {
         polyfills: './src/main/webapp/app/polyfills',
         global: './src/main/webapp/content/css/global.css',
-        main: './src/main/webapp/app/app.main'
+        main: './src/main/webapp/app/app.main-aot'
     },
     output: {
-        path: utils.root('target/www'),
+        path: utils.root('build/www'),
         filename: 'app/[name].[hash].bundle.js',
         chunkFilename: 'app/[id].[hash].chunk.js'
     },
     module: {
         rules: [{
-            test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-            use: [ '@ngtools/webpack' ]
+            test: /\.ts$/,
+            use: [
+                {
+                    loader: 'awesome-typescript-loader',
+                    options: {
+                        configFileName: 'tsconfig-aot.json'
+                    },
+                },
+                { loader: 'angular2-template-loader' }
+            ],
+            exclude: ['node_modules/generator-jhipster']
         },
         {
             test: /\.css$/,
@@ -77,18 +85,14 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
                 }
             }
         }),
-        new AngularCompilerPlugin({
-            mainPath: utils.root('src/main/webapp/app/app.main.ts'),
-            tsConfigPath: utils.root('tsconfig-aot.json'),
-            sourceMap: true
+        new ngcWebpack.NgcWebpackPlugin({
+            disabled: false,
+            tsConfig: utils.root('tsconfig-aot.json'),
+            resourceOverride: ''
         }),
         new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false
-        }),
-        new WorkboxPlugin.GenerateSW({
-          clientsClaim: true,
-          skipWaiting: true,
         })
     ]
 });
