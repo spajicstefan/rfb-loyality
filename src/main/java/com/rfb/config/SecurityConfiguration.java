@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
 import javax.annotation.PostConstruct;
 
@@ -40,16 +41,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final RememberMeServices rememberMeServices;
 
     private final CorsFilter corsFilter;
+    
+    private final SecurityProblemSupport problemSupport;
 
     public SecurityConfiguration(AuthenticationManagerBuilder authenticationManagerBuilder, UserDetailsService userDetailsService,
         JHipsterProperties jHipsterProperties, RememberMeServices rememberMeServices,
-        CorsFilter corsFilter) {
+        CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
 
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.userDetailsService = userDetailsService;
         this.jHipsterProperties = jHipsterProperties;
         this.rememberMeServices = rememberMeServices;
         this.corsFilter = corsFilter;
+        this.problemSupport = problemSupport;
     }
 
     @PostConstruct
@@ -79,11 +83,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public Http401UnauthorizedEntryPoint http401UnauthorizedEntryPoint() {
-        return new Http401UnauthorizedEntryPoint();
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -108,7 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
-            .authenticationEntryPoint(http401UnauthorizedEntryPoint())
+            .authenticationEntryPoint(problemSupport)
         .and()
             .rememberMe()
             .rememberMeServices(rememberMeServices)
