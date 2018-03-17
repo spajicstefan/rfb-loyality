@@ -18,25 +18,25 @@ public interface RfbLocationService {
     RfbLocationDTO save(RfbLocationDTO rfbLocationDTO);
 
     /**
-     * Get all the rfbLocations.
+     *  Get all the rfbLocations.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     *  @param pageable the pagination information
+     *  @return the list of entities
      */
     Page<RfbLocationDTO> findAll(Pageable pageable);
 
     /**
-     * Get the "id" rfbLocation.
+     *  Get the "id" rfbLocation.
      *
-     * @param id the id of the entity
-     * @return the entity
+     *  @param id the id of the entity
+     *  @return the entity
      */
     RfbLocationDTO findOne(Long id);
 
     /**
-     * Delete the "id" rfbLocation.
+     *  Delete the "id" rfbLocation.
      *
-     * @param id the id of the entity
+     *  @param id the id of the entity
      */
     void delete(Long id);
 }

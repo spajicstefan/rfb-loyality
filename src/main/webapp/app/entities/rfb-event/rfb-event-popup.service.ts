@@ -1,9 +1,8 @@
-import { Injectable, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { HttpResponse } from '@angular/common/http';
-import { RfbEvent } from './rfb-event.model';
-import { RfbEventService } from './rfb-event.service';
+import {Component, Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {RfbEvent} from './rfb-event.model';
+import {RfbEventService} from './rfb-event.service';
 
 @Injectable()
 export class RfbEventPopupService {
@@ -26,19 +25,17 @@ export class RfbEventPopupService {
             }
 
             if (id) {
-                this.rfbEventService.find(id)
-                    .subscribe((rfbEventResponse: HttpResponse<RfbEvent>) => {
-                        const rfbEvent: RfbEvent = rfbEventResponse.body;
-                        if (rfbEvent.eventDate) {
-                            rfbEvent.eventDate = {
-                                year: rfbEvent.eventDate.getFullYear(),
-                                month: rfbEvent.eventDate.getMonth() + 1,
-                                day: rfbEvent.eventDate.getDate()
-                            };
-                        }
-                        this.ngbModalRef = this.rfbEventModalRef(component, rfbEvent);
-                        resolve(this.ngbModalRef);
-                    });
+                this.rfbEventService.find(id).subscribe((rfbEvent) => {
+                    if (rfbEvent.eventDate) {
+                        rfbEvent.eventDate = {
+                            year: rfbEvent.eventDate.getFullYear(),
+                            month: rfbEvent.eventDate.getMonth() + 1,
+                            day: rfbEvent.eventDate.getDate()
+                        };
+                    }
+                    this.ngbModalRef = this.rfbEventModalRef(component, rfbEvent);
+                    resolve(this.ngbModalRef);
+                });
             } else {
                 // setTimeout used as a workaround for getting ExpressionChangedAfterItHasBeenCheckedError
                 setTimeout(() => {
@@ -53,10 +50,10 @@ export class RfbEventPopupService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.rfbEvent = rfbEvent;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
             this.ngbModalRef = null;
         });
         return modalRef;

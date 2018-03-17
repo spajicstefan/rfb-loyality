@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { Response } from '@angular/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import { JhiEventManager, JhiPaginationUtil, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { ITEMS_PER_PAGE, Principal, User, UserService } from '../../shared';
+import { ITEMS_PER_PAGE, Principal, User, UserService, ResponseWrapper } from '../../shared';
+import { PaginationConfig } from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-user-mgmt',
@@ -27,12 +28,14 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
 
     constructor(
         private userService: UserService,
+        private parseLinks: JhiParseLinks,
         private alertService: JhiAlertService,
         private principal: Principal,
-        private parseLinks: JhiParseLinks,
+        private eventManager: JhiEventManager,
+        private paginationUtil: JhiPaginationUtil,
+        private paginationConfig: PaginationConfig,
         private activatedRoute: ActivatedRoute,
-        private router: Router,
-        private eventManager: JhiEventManager
+        private router: Router
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.routeData = this.activatedRoute.data.subscribe((data) => {
@@ -80,8 +83,8 @@ export class UserMgmtComponent implements OnInit, OnDestroy {
             page: this.page - 1,
             size: this.itemsPerPage,
             sort: this.sort()}).subscribe(
-                (res: HttpResponse<User[]>) => this.onSuccess(res.body, res.headers),
-                (res: HttpResponse<any>) => this.onError(res.body)
+            (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
+            (res: ResponseWrapper) => this.onError(res.json)
         );
     }
 

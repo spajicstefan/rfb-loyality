@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs/Subscription';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs/Rx';
+import {JhiAlertService, JhiEventManager, JhiParseLinks} from 'ng-jhipster';
 
-import { RfbEventAttendance } from './rfb-event-attendance.model';
-import { RfbEventAttendanceService } from './rfb-event-attendance.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
+import {RfbEventAttendance} from './rfb-event-attendance.model';
+import {RfbEventAttendanceService} from './rfb-event-attendance.service';
+import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
 
 @Component({
     selector: 'jhi-rfb-event-attendance',
@@ -26,7 +25,7 @@ export class RfbEventAttendanceComponent implements OnInit, OnDestroy {
 
     constructor(
         private rfbEventAttendanceService: RfbEventAttendanceService,
-        private jhiAlertService: JhiAlertService,
+        private alertService: JhiAlertService,
         private eventManager: JhiEventManager,
         private parseLinks: JhiParseLinks,
         private principal: Principal
@@ -47,8 +46,8 @@ export class RfbEventAttendanceComponent implements OnInit, OnDestroy {
             size: this.itemsPerPage,
             sort: this.sort()
         }).subscribe(
-            (res: HttpResponse<RfbEventAttendance[]>) => this.onSuccess(res.body, res.headers),
-            (res: HttpErrorResponse) => this.onError(res.message)
+            (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
+            (res: ResponseWrapper) => this.onError(res.json)
         );
     }
 
@@ -98,6 +97,6 @@ export class RfbEventAttendanceComponent implements OnInit, OnDestroy {
     }
 
     private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+        this.alertService.error(error.message, null, null);
     }
 }

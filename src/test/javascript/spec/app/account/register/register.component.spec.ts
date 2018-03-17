@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, async, inject, tick, fakeAsync } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
-
+import { Renderer, ElementRef } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 import { RfbloyaltyTestModule } from '../../../test.module';
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from '../../../../../../main/webapp/app/shared';
+import { LoginModalService } from '../../../../../../main/webapp/app/shared';
 import { Register } from '../../../../../../main/webapp/app/account/register/register.service';
 import { RegisterComponent } from '../../../../../../main/webapp/app/account/register/register.component';
 
@@ -17,10 +17,21 @@ describe('Component Tests', () => {
                 imports: [RfbloyaltyTestModule],
                 declarations: [RegisterComponent],
                 providers: [
-                    Register
+                    Register,
+                    {
+                        provide: LoginModalService,
+                        useValue: null
+                    },
+                    {
+                        provide: Renderer,
+                        useValue: null
+                    },
+                    {
+                        provide: ElementRef,
+                        useValue: null
+                    }
                 ]
-            })
-            .overrideTemplate(RegisterComponent, '')
+            }).overrideTemplate(RegisterComponent, '')
             .compileComponents();
         }));
 
@@ -66,7 +77,7 @@ describe('Component Tests', () => {
                 fakeAsync((service: Register) => {
                     spyOn(service, 'save').and.returnValue(Observable.throw({
                         status: 400,
-                        error: { type: LOGIN_ALREADY_USED_TYPE }
+                        _body: 'login already in use'
                     }));
                     comp.registerAccount.password = comp.confirmPassword = 'password';
 
@@ -85,7 +96,7 @@ describe('Component Tests', () => {
                 fakeAsync((service: Register) => {
                     spyOn(service, 'save').and.returnValue(Observable.throw({
                         status: 400,
-                        error: { type: EMAIL_ALREADY_USED_TYPE }
+                        _body: 'email address already in use'
                     }));
                     comp.registerAccount.password = comp.confirmPassword = 'password';
 

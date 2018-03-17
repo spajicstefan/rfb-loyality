@@ -1,14 +1,12 @@
 package com.rfb.web.rest;
 
 import com.rfb.RfbloyaltyApp;
-
 import com.rfb.domain.RfbEvent;
 import com.rfb.repository.RfbEventRepository;
 import com.rfb.service.RfbEventService;
 import com.rfb.service.dto.RfbEventDTO;
 import com.rfb.service.mapper.RfbEventMapper;
 import com.rfb.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +26,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
-import static com.rfb.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -81,7 +78,6 @@ public class RfbEventResourceIntTest {
         this.restRfbEventMockMvc = MockMvcBuilders.standaloneSetup(rfbEventResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -190,8 +186,6 @@ public class RfbEventResourceIntTest {
 
         // Update the rfbEvent
         RfbEvent updatedRfbEvent = rfbEventRepository.findOne(rfbEvent.getId());
-        // Disconnect from session so that the updates on updatedRfbEvent are not directly saved in db
-        em.detach(updatedRfbEvent);
         updatedRfbEvent
             .eventDate(UPDATED_EVENT_DATE)
             .eventCode(UPDATED_EVENT_CODE);

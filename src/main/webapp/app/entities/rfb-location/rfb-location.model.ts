@@ -1,11 +1,11 @@
-import { BaseEntity } from './../../shared';
+import {BaseEntity} from './../../shared';
 
 export class RfbLocation implements BaseEntity {
     constructor(
         public id?: number,
         public locationName?: string,
         public runDayOfWeek?: number,
-        public rfbEvents?: BaseEntity[],
+        public rvbEvents?: BaseEntity[],
     ) {
     }
 }

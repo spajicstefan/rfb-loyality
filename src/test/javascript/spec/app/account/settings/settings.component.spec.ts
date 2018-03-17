@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs/Rx';
 import { RfbloyaltyTestModule } from '../../../test.module';
 import { Principal, AccountService } from '../../../../../../main/webapp/app/shared';
 import { SettingsComponent } from '../../../../../../main/webapp/app/account/settings/settings.component';
+import { MockAccountService } from '../../../helpers/mock-account.service';
+import { MockPrincipal } from '../../../helpers/mock-principal.service';
 
 describe('Component Tests', () => {
 
@@ -19,9 +20,16 @@ describe('Component Tests', () => {
                 imports: [RfbloyaltyTestModule],
                 declarations: [SettingsComponent],
                 providers: [
+                    {
+                        provide: Principal,
+                        useClass: MockPrincipal
+                    },
+                    {
+                        provide: AccountService,
+                        useClass: MockAccountService
+                    },
                 ]
-            })
-            .overrideTemplate(SettingsComponent, '')
+            }).overrideTemplate(SettingsComponent, '')
             .compileComponents();
         }));
 

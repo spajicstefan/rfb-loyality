@@ -18,25 +18,25 @@ public interface RfbEventAttendanceService {
     RfbEventAttendanceDTO save(RfbEventAttendanceDTO rfbEventAttendanceDTO);
 
     /**
-     * Get all the rfbEventAttendances.
+     *  Get all the rfbEventAttendances.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     *  @param pageable the pagination information
+     *  @return the list of entities
      */
     Page<RfbEventAttendanceDTO> findAll(Pageable pageable);
 
     /**
-     * Get the "id" rfbEventAttendance.
+     *  Get the "id" rfbEventAttendance.
      *
-     * @param id the id of the entity
-     * @return the entity
+     *  @param id the id of the entity
+     *  @return the entity
      */
     RfbEventAttendanceDTO findOne(Long id);
 
     /**
-     * Delete the "id" rfbEventAttendance.
+     *  Delete the "id" rfbEventAttendance.
      *
-     * @param id the id of the entity
+     *  @param id the id of the entity
      */
     void delete(Long id);
 }

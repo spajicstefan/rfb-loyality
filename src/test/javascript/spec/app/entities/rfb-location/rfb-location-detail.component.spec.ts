@@ -1,12 +1,15 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-
-import { RfbloyaltyTestModule } from '../../../test.module';
-import { RfbLocationDetailComponent } from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location-detail.component';
-import { RfbLocationService } from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location.service';
-import { RfbLocation } from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location.model';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {OnInit} from '@angular/core';
+import {DatePipe} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Rx';
+import {JhiDataUtils, JhiDateUtils, JhiEventManager} from 'ng-jhipster';
+import {RfbloyaltyTestModule} from '../../../test.module';
+import {MockActivatedRoute} from '../../../helpers/mock-route.service';
+import {RfbLocationDetailComponent} from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location-detail.component';
+import {RfbLocationService} from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location.service';
+import {RfbLocation} from '../../../../../../main/webapp/app/entities/rfb-location/rfb-location.model';
 
 describe('Component Tests', () => {
 
@@ -20,10 +23,17 @@ describe('Component Tests', () => {
                 imports: [RfbloyaltyTestModule],
                 declarations: [RfbLocationDetailComponent],
                 providers: [
-                    RfbLocationService
+                    JhiDateUtils,
+                    JhiDataUtils,
+                    DatePipe,
+                    {
+                        provide: ActivatedRoute,
+                        useValue: new MockActivatedRoute({id: 123})
+                    },
+                    RfbLocationService,
+                    JhiEventManager
                 ]
-            })
-            .overrideTemplate(RfbLocationDetailComponent, '')
+            }).overrideTemplate(RfbLocationDetailComponent, '')
             .compileComponents();
         }));
 
@@ -35,18 +45,16 @@ describe('Component Tests', () => {
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-                // GIVEN
+            // GIVEN
 
-                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
-                    body: new RfbLocation(123)
-                })));
+            spyOn(service, 'find').and.returnValue(Observable.of(new RfbLocation(10)));
 
-                // WHEN
-                comp.ngOnInit();
+            // WHEN
+            comp.ngOnInit();
 
-                // THEN
-                expect(service.find).toHaveBeenCalledWith(123);
-                expect(comp.rfbLocation).toEqual(jasmine.objectContaining({id: 123}));
+            // THEN
+            expect(service.find).toHaveBeenCalledWith(123);
+            expect(comp.rfbLocation).toEqual(jasmine.objectContaining({id: 10}));
             });
         });
     });

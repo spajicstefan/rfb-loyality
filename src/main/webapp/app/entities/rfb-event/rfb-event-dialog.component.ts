@@ -1,15 +1,16 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Response} from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import {Observable} from 'rxjs/Rx';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiAlertService, JhiEventManager} from 'ng-jhipster';
 
-import { RfbEvent } from './rfb-event.model';
-import { RfbEventPopupService } from './rfb-event-popup.service';
-import { RfbEventService } from './rfb-event.service';
-import { RfbLocation, RfbLocationService } from '../rfb-location';
+import {RfbEvent} from './rfb-event.model';
+import {RfbEventPopupService} from './rfb-event-popup.service';
+import {RfbEventService} from './rfb-event.service';
+import {RfbLocation, RfbLocationService} from '../rfb-location';
+import {ResponseWrapper} from '../../shared';
 
 @Component({
     selector: 'jhi-rfb-event-dialog',
@@ -25,7 +26,7 @@ export class RfbEventDialogComponent implements OnInit {
 
     constructor(
         public activeModal: NgbActiveModal,
-        private jhiAlertService: JhiAlertService,
+        private alertService: JhiAlertService,
         private rfbEventService: RfbEventService,
         private rfbLocationService: RfbLocationService,
         private eventManager: JhiEventManager
@@ -35,7 +36,14 @@ export class RfbEventDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.rfbLocationService.query()
-            .subscribe((res: HttpResponse<RfbLocation[]>) => { this.rfblocations = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
+            .subscribe((res: ResponseWrapper) => {
+                    this.rfblocations = res.json;
+                },
+                (res: ResponseWrapper) => this.onError(res.json)
+            );
+        if (typeof this.rfbEvent.rfbLocationDTO === 'undefined') {
+            this.rfbEvent.rfbLocationDTO = new RfbLocation();
+        }
     }
 
     clear() {
@@ -53,9 +61,9 @@ export class RfbEventDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<RfbEvent>>) {
-        result.subscribe((res: HttpResponse<RfbEvent>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<RfbEvent>) {
+        result.subscribe((res: RfbEvent) =>
+            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: RfbEvent) {
@@ -69,7 +77,7 @@ export class RfbEventDialogComponent implements OnInit {
     }
 
     private onError(error: any) {
-        this.jhiAlertService.error(error.message, null, null);
+        this.alertService.error(error.message, null, null);
     }
 
     trackRfbLocationById(index: number, item: RfbLocation) {

@@ -1,76 +1,75 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { SERVER_API_URL } from '../../app.constants';
+import {Injectable} from '@angular/core';
+import {Http, Response} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
+import {SERVER_API_URL} from '../../app.constants';
 
-import { JhiDateUtils } from 'ng-jhipster';
+import {JhiDateUtils} from 'ng-jhipster';
 
-import { RfbEvent } from './rfb-event.model';
-import { createRequestOption } from '../../shared';
-
-export type EntityResponseType = HttpResponse<RfbEvent>;
+import {RfbEvent} from './rfb-event.model';
+import {createRequestOption, ResponseWrapper} from '../../shared';
 
 @Injectable()
 export class RfbEventService {
 
-    private resourceUrl =  SERVER_API_URL + 'api/rfb-events';
+    private resourceUrl = SERVER_API_URL + 'api/rfb-events';
 
-    constructor(private http: HttpClient, private dateUtils: JhiDateUtils) { }
+    constructor(private http: Http, private dateUtils: JhiDateUtils) { }
 
-    create(rfbEvent: RfbEvent): Observable<EntityResponseType> {
+    create(rfbEvent: RfbEvent): Observable<RfbEvent> {
         const copy = this.convert(rfbEvent);
-        return this.http.post<RfbEvent>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+        return this.http.post(this.resourceUrl, copy).map((res: Response) => {
+            const jsonResponse = res.json();
+            this.convertItemFromServer(jsonResponse);
+            return jsonResponse;
+        });
     }
 
-    update(rfbEvent: RfbEvent): Observable<EntityResponseType> {
+    update(rfbEvent: RfbEvent): Observable<RfbEvent> {
         const copy = this.convert(rfbEvent);
-        return this.http.put<RfbEvent>(this.resourceUrl, copy, { observe: 'response' })
-            .map((res: EntityResponseType) => this.convertResponse(res));
+        return this.http.put(this.resourceUrl, copy).map((res: Response) => {
+            const jsonResponse = res.json();
+            this.convertItemFromServer(jsonResponse);
+            return jsonResponse;
+        });
     }
 
-    find(id: number): Observable<EntityResponseType> {
-        return this.http.get<RfbEvent>(`${this.resourceUrl}/${id}`, { observe: 'response'})
-            .map((res: EntityResponseType) => this.convertResponse(res));
+    find(id: number): Observable<RfbEvent> {
+        return this.http.get(`${this.resourceUrl}/${id}`).map((res: Response) => {
+            const jsonResponse = res.json();
+            this.convertItemFromServer(jsonResponse);
+            return jsonResponse;
+        });
     }
 
-    query(req?: any): Observable<HttpResponse<RfbEvent[]>> {
+    query(req?: any): Observable<ResponseWrapper> {
         const options = createRequestOption(req);
-        return this.http.get<RfbEvent[]>(this.resourceUrl, { params: options, observe: 'response' })
-            .map((res: HttpResponse<RfbEvent[]>) => this.convertArrayResponse(res));
+        return this.http.get(this.resourceUrl, options)
+            .map((res: Response) => this.convertResponse(res));
     }
 
-    delete(id: number): Observable<HttpResponse<any>> {
-        return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response'});
+    delete(id: number): Observable<Response> {
+        return this.http.delete(`${this.resourceUrl}/${id}`);
     }
 
-    private convertResponse(res: EntityResponseType): EntityResponseType {
-        const body: RfbEvent = this.convertItemFromServer(res.body);
-        return res.clone({body});
+    findByLocation(locationId: number): Observable<RfbEvent> {
+        return this.http.get(`${this.resourceUrl}/location/${locationId}`).map((res: Response) => {
+            return res.json();
+        });
     }
 
-    private convertArrayResponse(res: HttpResponse<RfbEvent[]>): HttpResponse<RfbEvent[]> {
-        const jsonResponse: RfbEvent[] = res.body;
-        const body: RfbEvent[] = [];
+    private convertResponse(res: Response): ResponseWrapper {
+        const jsonResponse = res.json();
         for (let i = 0; i < jsonResponse.length; i++) {
-            body.push(this.convertItemFromServer(jsonResponse[i]));
+            this.convertItemFromServer(jsonResponse[i]);
         }
-        return res.clone({body});
+        return new ResponseWrapper(res.headers, jsonResponse, res.status);
     }
 
-    /**
-     * Convert a returned JSON object to RfbEvent.
-     */
-    private convertItemFromServer(rfbEvent: RfbEvent): RfbEvent {
-        const copy: RfbEvent = Object.assign({}, rfbEvent);
-        copy.eventDate = this.dateUtils
-            .convertLocalDateFromServer(rfbEvent.eventDate);
-        return copy;
+    private convertItemFromServer(entity: any) {
+        entity.eventDate = this.dateUtils
+            .convertLocalDateFromServer(entity.eventDate);
     }
 
-    /**
-     * Convert a RfbEvent to a JSON which can be sent to the server.
-     */
     private convert(rfbEvent: RfbEvent): RfbEvent {
         const copy: RfbEvent = Object.assign({}, rfbEvent);
         copy.eventDate = this.dateUtils

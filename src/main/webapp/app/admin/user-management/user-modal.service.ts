@@ -24,8 +24,8 @@ export class UserModalService {
             }
 
             if (id) {
-                this.userService.find(id).subscribe((response) => {
-                    this.ngbModalRef = this.userModalRef(component, response.body);
+                this.userService.find(id).subscribe((user) => {
+                    this.ngbModalRef = this.userModalRef(component, user);
                     resolve(this.ngbModalRef);
                 });
             } else {
@@ -42,10 +42,10 @@ export class UserModalService {
         const modalRef = this.modalService.open(component, { size: 'lg', backdrop: 'static'});
         modalRef.componentInstance.user = user;
         modalRef.result.then((result) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
             this.ngbModalRef = null;
         }, (reason) => {
-            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true, queryParamsHandling: 'merge' });
+            this.router.navigate([{ outlets: { popup: null }}], { replaceUrl: true });
             this.ngbModalRef = null;
         });
         return modalRef;

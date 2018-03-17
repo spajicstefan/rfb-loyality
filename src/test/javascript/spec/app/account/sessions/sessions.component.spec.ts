@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs/Rx';
 import { RfbloyaltyTestModule } from '../../../test.module';
 import { Session } from '../../../../../../main/webapp/app/account/sessions/session.model';
 import { SessionsComponent } from '../../../../../../main/webapp/app/account/sessions/sessions.component';
@@ -23,10 +22,13 @@ describe('Component Tests', () => {
                 imports: [RfbloyaltyTestModule],
                 declarations: [SessionsComponent],
                 providers: [
-                    SessionsService
+                    SessionsService,
+                    {
+                        provide: Principal,
+                        useClass: MockPrincipal
+                    }
                 ]
-            })
-            .overrideTemplate(SessionsComponent, '')
+            }).overrideTemplate(SessionsComponent, '')
             .createComponent(SessionsComponent);
             comp = fixture.componentInstance;
         });

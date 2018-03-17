@@ -1,12 +1,13 @@
 package com.rfb.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.rfb.domain.RfbEvent;
 import com.rfb.service.RfbEventService;
-import com.rfb.web.rest.errors.BadRequestAlertException;
+import com.rfb.service.dto.RfbEventDTO;
 import com.rfb.web.rest.util.HeaderUtil;
 import com.rfb.web.rest.util.PaginationUtil;
-import com.rfb.service.dto.RfbEventDTO;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class RfbEventResource {
     public ResponseEntity<RfbEventDTO> createRfbEvent(@RequestBody RfbEventDTO rfbEventDTO) throws URISyntaxException {
         log.debug("REST request to save RfbEvent : {}", rfbEventDTO);
         if (rfbEventDTO.getId() != null) {
-            throw new BadRequestAlertException("A new rfbEvent cannot already have an ID", ENTITY_NAME, "idexists");
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new rfbEvent cannot already have an ID")).body(null);
         }
         RfbEventDTO result = rfbEventService.save(rfbEventDTO);
         return ResponseEntity.created(new URI("/api/rfb-events/" + result.getId()))
@@ -89,7 +90,7 @@ public class RfbEventResource {
      */
     @GetMapping("/rfb-events")
     @Timed
-    public ResponseEntity<List<RfbEventDTO>> getAllRfbEvents(Pageable pageable) {
+    public ResponseEntity<List<RfbEventDTO>> getAllRfbEvents(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of RfbEvents");
         Page<RfbEventDTO> page = rfbEventService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/rfb-events");
@@ -123,4 +124,19 @@ public class RfbEventResource {
         rfbEventService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
+
+    /**
+     * GET  /rfb-events/location/id : get a single event for the location and today
+     *
+     * @param locationID the location of the event
+     * @return the ResponseEntity with status 200 (OK) and the list of rfbEvents in body
+     */
+    @GetMapping("/rfb-events/location/{locationID}")
+    @Timed
+    public ResponseEntity<RfbEventDTO> getTodaysEventByLocation(@PathVariable Long locationID) {
+        log.debug("REST request to get a single event by location and today's date.");
+        RfbEventDTO event = rfbEventService.findByTodayAndLocation(locationID);
+        return new ResponseEntity<RfbEventDTO>(event,null,HttpStatus.OK);
+    }
+
 }

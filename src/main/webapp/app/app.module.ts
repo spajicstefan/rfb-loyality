@@ -1,25 +1,23 @@
 import './vendor.ts';
 
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Ng2Webstorage } from 'ngx-webstorage';
-import { JhiEventManager } from 'ng-jhipster';
+import { Ng2Webstorage } from 'ng2-webstorage';
 
-import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
-import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
-import { NotificationInterceptor } from './blocks/interceptor/notification.interceptor';
 import { RfbloyaltySharedModule, UserRouteAccessService } from './shared';
-import { RfbloyaltyAppRoutingModule} from './app-routing.module';
 import { RfbloyaltyHomeModule } from './home/home.module';
 import { RfbloyaltyAdminModule } from './admin/admin.module';
 import { RfbloyaltyAccountModule } from './account/account.module';
 import { RfbloyaltyEntityModule } from './entities/entity.module';
+
+import { customHttpProvider } from './blocks/interceptor/http.provider';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
-import { StateStorageService } from './shared/auth/state-storage.service';
+
 // jhipster-needle-angular-add-module-import JHipster will add new module here
+
 import {
     JhiMainComponent,
+    LayoutRoutingModule,
     NavbarComponent,
     FooterComponent,
     ProfileService,
@@ -30,7 +28,7 @@ import {
 @NgModule({
     imports: [
         BrowserModule,
-        RfbloyaltyAppRoutingModule,
+        LayoutRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         RfbloyaltySharedModule,
         RfbloyaltyHomeModule,
@@ -48,33 +46,9 @@ import {
     ],
     providers: [
         ProfileService,
+        customHttpProvider(),
         PaginationConfig,
-        UserRouteAccessService,
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthExpiredInterceptor,
-            multi: true,
-            deps: [
-                StateStorageService,
-                Injector
-            ]
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: ErrorHandlerInterceptor,
-            multi: true,
-            deps: [
-                JhiEventManager
-            ]
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: NotificationInterceptor,
-            multi: true,
-            deps: [
-                Injector
-            ]
-        }
+        UserRouteAccessService
     ],
     bootstrap: [ JhiMainComponent ]
 })

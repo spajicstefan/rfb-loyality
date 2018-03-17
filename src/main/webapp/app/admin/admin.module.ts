@@ -33,7 +33,7 @@ import {
 @NgModule({
     imports: [
         RfbloyaltySharedModule,
-        RouterModule.forChild(adminState),
+        RouterModule.forRoot(adminState, { useHash: true }),
         /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
     ],
     declarations: [

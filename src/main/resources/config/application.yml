@@ -13,14 +13,10 @@
 # Full reference is available at:
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
-
 management:
     security:
         roles: ADMIN
     context-path: /management
-    info:
-        git:
-            mode: full
     health:
         mail:
             enabled: false # When using the MailService, configure an SMTP server and set this to true
@@ -29,7 +25,7 @@ spring:
         name: rfbloyalty
     profiles:
         # The commented value for `active` can be replaced with valid Spring profiles to load.
-        # Otherwise, it will be filled in by maven when building the WAR file
+        # Otherwise, it will be filled in by gradle when building the WAR file
         # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
         active: #spring.profiles.active#
     jackson:
@@ -48,23 +44,7 @@ spring:
             enabled: false
     thymeleaf:
         mode: XHTML
-    social:
-        # see https://developers.google.com/+/web/signin/server-side-flow#step_1_create_a_client_id_and_client_secret
-        google:
-            client-id: xxx
-            client-secret: xxx
 
-        # see https://developers.facebook.com/docs/facebook-login/v2.2
-        facebook:
-            client-id: xxx
-            client-secret: xxx
-
-        # see https://apps.twitter.com/app/
-        twitter:
-            client-id: xxx
-            client-secret: xxx
-
-        # jhipster-needle-add-social-configuration
 security:
     basic:
         enabled: false
@@ -92,9 +72,9 @@ jhipster:
     # By default CORS is disabled. Uncomment to enable.
     #cors:
         #allowed-origins: "*"
-        #allowed-methods: "*"
+        #allowed-methods: GET, PUT, POST, DELETE, OPTIONS
         #allowed-headers: "*"
-        #exposed-headers: "Link,X-Total-Count"
+        #exposed-headers:
         #allow-credentials: true
         #max-age: 1800
     mail:
@@ -113,7 +93,7 @@ jhipster:
     social:
         redirect-after-sign-in: "/#/"
     ribbon:
-        display-on-active-profiles: dev
+        display-on-active-profiles:
 
 # ===================================================================
 # Application specific properties
@@ -125,3 +105,8 @@ jhipster:
 # ===================================================================
 
 application:
+
+logging:
+  level:
+    com.rfb.service: debug
+    com.rfb.aop.logging: error

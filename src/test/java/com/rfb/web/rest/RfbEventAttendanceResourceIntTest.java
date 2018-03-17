@@ -1,14 +1,12 @@
 package com.rfb.web.rest;
 
 import com.rfb.RfbloyaltyApp;
-
 import com.rfb.domain.RfbEventAttendance;
 import com.rfb.repository.RfbEventAttendanceRepository;
 import com.rfb.service.RfbEventAttendanceService;
 import com.rfb.service.dto.RfbEventAttendanceDTO;
 import com.rfb.service.mapper.RfbEventAttendanceMapper;
 import com.rfb.web.rest.errors.ExceptionTranslator;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +26,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
-import static com.rfb.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -78,7 +75,6 @@ public class RfbEventAttendanceResourceIntTest {
         this.restRfbEventAttendanceMockMvc = MockMvcBuilders.standaloneSetup(rfbEventAttendanceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
-            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -183,8 +179,6 @@ public class RfbEventAttendanceResourceIntTest {
 
         // Update the rfbEventAttendance
         RfbEventAttendance updatedRfbEventAttendance = rfbEventAttendanceRepository.findOne(rfbEventAttendance.getId());
-        // Disconnect from session so that the updates on updatedRfbEventAttendance are not directly saved in db
-        em.detach(updatedRfbEventAttendance);
         updatedRfbEventAttendance
             .attendanceDate(UPDATED_ATTENDANCE_DATE);
         RfbEventAttendanceDTO rfbEventAttendanceDTO = rfbEventAttendanceMapper.toDto(updatedRfbEventAttendance);

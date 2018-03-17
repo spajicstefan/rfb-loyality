@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-
 /**
  * Persistent tokens are used by Spring Security to automatically log in users.
  *
@@ -43,7 +42,6 @@ public class PersistentToken implements Serializable {
 
     @Column(name = "user_agent")
     private String userAgent;
-        
 
     @JsonIgnore
     @ManyToOne

@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { RfbEventAttendance } from './rfb-event-attendance.model';
-import { RfbEventAttendancePopupService } from './rfb-event-attendance-popup.service';
-import { RfbEventAttendanceService } from './rfb-event-attendance.service';
+import {RfbEventAttendance} from './rfb-event-attendance.model';
+import {RfbEventAttendancePopupService} from './rfb-event-attendance-popup.service';
+import {RfbEventAttendanceService} from './rfb-event-attendance.service';
 
 @Component({
     selector: 'jhi-rfb-event-attendance-delete-dialog',
@@ -31,7 +31,7 @@ export class RfbEventAttendanceDeleteDialogComponent {
         this.rfbEventAttendanceService.delete(id).subscribe((response) => {
             this.eventManager.broadcast({
                 name: 'rfbEventAttendanceListModification',
-                content: 'Deleted an rfbEventAttendance'
+                content: 'Deleted an Event Attendance'
             });
             this.activeModal.dismiss(true);
         });

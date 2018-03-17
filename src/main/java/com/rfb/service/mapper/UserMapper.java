@@ -3,10 +3,11 @@ package com.rfb.service.mapper;
 import com.rfb.domain.Authority;
 import com.rfb.domain.User;
 import com.rfb.service.dto.UserDTO;
-
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +20,11 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     public UserDTO userToUserDTO(User user) {
-        return new UserDTO(user);
+        if (user != null) {
+            return new UserDTO(user);
+        } else {
+            return null;
+        }
     }
 
     public List<UserDTO> usersToUserDTOs(List<User> users) {
@@ -43,7 +48,7 @@ public class UserMapper {
             user.setActivated(userDTO.isActivated());
             user.setLangKey(userDTO.getLangKey());
             Set<Authority> authorities = this.authoritiesFromStrings(userDTO.getAuthorities());
-            if (authorities != null) {
+            if(authorities != null) {
                 user.setAuthorities(authorities);
             }
             return user;
@@ -67,10 +72,14 @@ public class UserMapper {
     }
 
     public Set<Authority> authoritiesFromStrings(Set<String> strings) {
-        return strings.stream().map(string -> {
-            Authority auth = new Authority();
-            auth.setName(string);
-            return auth;
-        }).collect(Collectors.toSet());
+        if (strings != null) {
+            return strings.stream().map(string -> {
+                Authority auth = new Authority();
+                auth.setName(string);
+                return auth;
+            }).collect(Collectors.toSet());
+        } else {
+            return null;
+        }
     }
 }

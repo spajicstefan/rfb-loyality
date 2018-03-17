@@ -1,8 +1,8 @@
 package com.rfb.service.impl;
 
-import com.rfb.service.RfbLocationService;
 import com.rfb.domain.RfbLocation;
 import com.rfb.repository.RfbLocationRepository;
+import com.rfb.service.RfbLocationService;
 import com.rfb.service.dto.RfbLocationDTO;
 import com.rfb.service.mapper.RfbLocationMapper;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class RfbLocationServiceImpl implements RfbLocationService {
+public class RfbLocationServiceImpl implements RfbLocationService{
 
     private final Logger log = LoggerFactory.getLogger(RfbLocationServiceImpl.class);
 
@@ -46,10 +46,10 @@ public class RfbLocationServiceImpl implements RfbLocationService {
     }
 
     /**
-     * Get all the rfbLocations.
+     *  Get all the rfbLocations.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     *  @param pageable the pagination information
+     *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -60,10 +60,10 @@ public class RfbLocationServiceImpl implements RfbLocationService {
     }
 
     /**
-     * Get one rfbLocation by id.
+     *  Get one rfbLocation by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     *  @param id the id of the entity
+     *  @return the entity
      */
     @Override
     @Transactional(readOnly = true)
@@ -74,9 +74,9 @@ public class RfbLocationServiceImpl implements RfbLocationService {
     }
 
     /**
-     * Delete the rfbLocation by id.
+     *  Delete the  rfbLocation by id.
      *
-     * @param id the id of the entity
+     *  @param id the id of the entity
      */
     @Override
     public void delete(Long id) {

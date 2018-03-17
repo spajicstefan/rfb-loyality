@@ -1,16 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Response} from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager, JhiAlertService } from 'ng-jhipster';
+import {Observable} from 'rxjs/Rx';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiAlertService, JhiEventManager} from 'ng-jhipster';
 
-import { RfbEventAttendance } from './rfb-event-attendance.model';
-import { RfbEventAttendancePopupService } from './rfb-event-attendance-popup.service';
-import { RfbEventAttendanceService } from './rfb-event-attendance.service';
-import { RfbEvent, RfbEventService } from '../rfb-event';
-import { RfbUser, RfbUserService } from '../rfb-user';
+import {RfbEventAttendance} from './rfb-event-attendance.model';
+import {RfbEventAttendancePopupService} from './rfb-event-attendance-popup.service';
+import {RfbEventAttendanceService} from './rfb-event-attendance.service';
+import {RfbEvent, RfbEventService} from '../rfb-event';
+import {ResponseWrapper} from '../../shared';
+import {User} from '../../shared/user/user.model';
+import {UserService} from '../../shared/user/user.service';
 
 @Component({
     selector: 'jhi-rfb-event-attendance-dialog',
@@ -20,18 +22,16 @@ export class RfbEventAttendanceDialogComponent implements OnInit {
 
     rfbEventAttendance: RfbEventAttendance;
     isSaving: boolean;
-
     rfbevents: RfbEvent[];
-
-    rfbusers: RfbUser[];
+    users: User[];
     attendanceDateDp: any;
 
     constructor(
         public activeModal: NgbActiveModal,
-        private jhiAlertService: JhiAlertService,
+        private alertService: JhiAlertService,
         private rfbEventAttendanceService: RfbEventAttendanceService,
         private rfbEventService: RfbEventService,
-        private rfbUserService: RfbUserService,
+        private userService: UserService,
         private eventManager: JhiEventManager
     ) {
     }
@@ -39,20 +39,13 @@ export class RfbEventAttendanceDialogComponent implements OnInit {
     ngOnInit() {
         this.isSaving = false;
         this.rfbEventService.query()
-            .subscribe((res: HttpResponse<RfbEvent[]>) => { this.rfbevents = res.body; }, (res: HttpErrorResponse) => this.onError(res.message));
-        this.rfbUserService
-            .query({filter: 'rfbeventattendance-is-null'})
-            .subscribe((res: HttpResponse<RfbUser[]>) => {
-                if (!this.rfbEventAttendance.rfbUserId) {
-                    this.rfbusers = res.body;
-                } else {
-                    this.rfbUserService
-                        .find(this.rfbEventAttendance.rfbUserId)
-                        .subscribe((subRes: HttpResponse<RfbUser>) => {
-                            this.rfbusers = [subRes.body].concat(res.body);
-                        }, (subRes: HttpErrorResponse) => this.onError(subRes.message));
-                }
-            }, (res: HttpErrorResponse) => this.onError(res.message));
+            .subscribe((res: ResponseWrapper) => { this.rfbevents = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        this.userService.findByAuthority('ROLE_RUNNER')
+            .subscribe((res: ResponseWrapper) => { this.users = res.json; }, (res: ResponseWrapper) => this.onError(res.json));
+        if (typeof this.rfbEventAttendance.rfbEventDTO === 'undefined') {
+            this.rfbEventAttendance.rfbEventDTO = new RfbEvent();
+            this.rfbEventAttendance.userDTO = new User();
+        }
     }
 
     clear() {
@@ -70,9 +63,9 @@ export class RfbEventAttendanceDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<RfbEventAttendance>>) {
-        result.subscribe((res: HttpResponse<RfbEventAttendance>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<RfbEventAttendance>) {
+        result.subscribe((res: RfbEventAttendance) =>
+            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: RfbEventAttendance) {
@@ -86,14 +79,14 @@ export class RfbEventAttendanceDialogComponent implements OnInit {
     }
 
     private onError(error: any) {
-        this.jhiAlertService.error(error.message, null, null);
+        this.alertService.error(error.message, null, null);
     }
 
     trackRfbEventById(index: number, item: RfbEvent) {
         return item.id;
     }
 
-    trackRfbUserById(index: number, item: RfbUser) {
+    trackRfbUserById(index: number, item: User) {
         return item.id;
     }
 }

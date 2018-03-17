@@ -1,9 +1,9 @@
 package com.rfb.service.dto;
 
 
+import com.rfb.domain.RfbLocation;
+
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
 
 /**
@@ -14,6 +14,8 @@ public class RfbUserDTO implements Serializable {
     private Long id;
 
     private String username;
+
+    private RfbLocationDTO rfbLocationDTO;
 
     private Long homeLocationId;
 
@@ -33,12 +35,20 @@ public class RfbUserDTO implements Serializable {
         this.username = username;
     }
 
+    public RfbLocationDTO getRfbLocationDTO() {
+        return rfbLocationDTO;
+    }
+
+    public void setRfbLocationDTO(RfbLocationDTO rfbLocationDTO) {
+        this.rfbLocationDTO = rfbLocationDTO;
+    }
+
     public Long getHomeLocationId() {
         return homeLocationId;
     }
 
-    public void setHomeLocationId(Long rfbLocationId) {
-        this.homeLocationId = rfbLocationId;
+    public void setHomeLocationId(Long homeLocationId) {
+        this.homeLocationId = homeLocationId;
     }
 
     @Override

@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Response} from '@angular/http';
 
-import { Observable } from 'rxjs/Observable';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+import {Observable} from 'rxjs/Rx';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiAlertService, JhiEventManager} from 'ng-jhipster';
 
-import { RfbLocation } from './rfb-location.model';
-import { RfbLocationPopupService } from './rfb-location-popup.service';
-import { RfbLocationService } from './rfb-location.service';
+import {RfbLocation} from './rfb-location.model';
+import {RfbLocationPopupService} from './rfb-location-popup.service';
+import {RfbLocationService} from './rfb-location.service';
 
 @Component({
     selector: 'jhi-rfb-location-dialog',
@@ -21,6 +21,7 @@ export class RfbLocationDialogComponent implements OnInit {
 
     constructor(
         public activeModal: NgbActiveModal,
+        private alertService: JhiAlertService,
         private rfbLocationService: RfbLocationService,
         private eventManager: JhiEventManager
     ) {
@@ -45,9 +46,9 @@ export class RfbLocationDialogComponent implements OnInit {
         }
     }
 
-    private subscribeToSaveResponse(result: Observable<HttpResponse<RfbLocation>>) {
-        result.subscribe((res: HttpResponse<RfbLocation>) =>
-            this.onSaveSuccess(res.body), (res: HttpErrorResponse) => this.onSaveError());
+    private subscribeToSaveResponse(result: Observable<RfbLocation>) {
+        result.subscribe((res: RfbLocation) =>
+            this.onSaveSuccess(res), (res: Response) => this.onSaveError());
     }
 
     private onSaveSuccess(result: RfbLocation) {
@@ -58,6 +59,10 @@ export class RfbLocationDialogComponent implements OnInit {
 
     private onSaveError() {
         this.isSaving = false;
+    }
+
+    private onError(error: any) {
+        this.alertService.error(error.message, null, null);
     }
 }
 

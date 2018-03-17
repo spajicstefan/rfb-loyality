@@ -25,6 +25,7 @@ import org.xnio.OptionMap;
 import javax.servlet.*;
 import java.util.*;
 
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -102,7 +103,7 @@ public class WebConfigurerTest {
         assertThat(container.getMimeMappings().get("html")).isEqualTo("text/html;charset=utf-8");
         assertThat(container.getMimeMappings().get("json")).isEqualTo("text/html;charset=utf-8");
         if (container.getDocumentRoot() != null) {
-            assertThat(container.getDocumentRoot().getPath()).isEqualTo(FilenameUtils.separatorsToSystem("target/www"));
+            assertThat(container.getDocumentRoot().getPath()).isEqualTo(FilenameUtils.separatorsToSystem("build/www"));
         }
 
         Builder builder = Undertow.builder();
@@ -331,4 +332,5 @@ public class WebConfigurerTest {
             return null;
         }
     }
+
 }

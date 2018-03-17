@@ -1,6 +1,6 @@
 const webpackConfig = require('../../../webpack/webpack.test.js');
 
-const WATCH = process.argv.includes('--watch');
+const WATCH = process.argv.indexOf('--watch') > -1;
 
 module.exports = (config) => {
     config.set({
@@ -35,7 +35,7 @@ module.exports = (config) => {
         reporters: ['dots', 'junit', 'progress', 'karma-remap-istanbul', 'notify'],
 
         junitReporter: {
-            outputFile: '../../../../target/test-results/karma/TESTS-results.xml'
+            outputFile: '../../../../build/test-results/karma/TESTS-results.xml'
         },
 
         notifyReporter: {
@@ -46,8 +46,7 @@ module.exports = (config) => {
 
         remapIstanbulReporter: {
             reports: { // eslint-disable-line
-                'lcovonly': 'target/test-results/coverage/report-lcov/lcov.info',
-                'html': 'target/test-results/coverage',
+                'html': 'build/test-results/coverage',
                 'text-summary': null
             }
         },

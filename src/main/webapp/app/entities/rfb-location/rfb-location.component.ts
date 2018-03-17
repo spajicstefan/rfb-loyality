@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs/Rx';
+import {JhiAlertService, JhiEventManager, JhiPaginationUtil, JhiParseLinks} from 'ng-jhipster';
 
-import { RfbLocation } from './rfb-location.model';
-import { RfbLocationService } from './rfb-location.service';
-import { ITEMS_PER_PAGE, Principal } from '../../shared';
+import {RfbLocation} from './rfb-location.model';
+import {RfbLocationService} from './rfb-location.service';
+import {ITEMS_PER_PAGE, Principal, ResponseWrapper} from '../../shared';
+import {PaginationConfig} from '../../blocks/config/uib-pagination.config';
 
 @Component({
     selector: 'jhi-rfb-location',
@@ -32,18 +32,20 @@ currentAccount: any;
     constructor(
         private rfbLocationService: RfbLocationService,
         private parseLinks: JhiParseLinks,
-        private jhiAlertService: JhiAlertService,
+        private alertService: JhiAlertService,
         private principal: Principal,
         private activatedRoute: ActivatedRoute,
         private router: Router,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private paginationUtil: JhiPaginationUtil,
+        private paginationConfig: PaginationConfig
     ) {
         this.itemsPerPage = ITEMS_PER_PAGE;
         this.routeData = this.activatedRoute.data.subscribe((data) => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
+            this.page = data['pagingParams'].page;
+            this.previousPage = data['pagingParams'].page;
+            this.reverse = data['pagingParams'].ascending;
+            this.predicate = data['pagingParams'].predicate;
         });
     }
 
@@ -52,8 +54,8 @@ currentAccount: any;
             page: this.page - 1,
             size: this.itemsPerPage,
             sort: this.sort()}).subscribe(
-                (res: HttpResponse<RfbLocation[]>) => this.onSuccess(res.body, res.headers),
-                (res: HttpErrorResponse) => this.onError(res.message)
+            (res: ResponseWrapper) => this.onSuccess(res.json, res.headers),
+            (res: ResponseWrapper) => this.onError(res.json)
         );
     }
     loadPage(page: number) {
@@ -116,6 +118,6 @@ currentAccount: any;
         this.rfbLocations = data;
     }
     private onError(error) {
-        this.jhiAlertService.error(error.message, null, null);
+        this.alertService.error(error.message, null, null);
     }
 }

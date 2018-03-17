@@ -1,8 +1,8 @@
 package com.rfb.service.impl;
 
-import com.rfb.service.RfbEventAttendanceService;
 import com.rfb.domain.RfbEventAttendance;
 import com.rfb.repository.RfbEventAttendanceRepository;
+import com.rfb.service.RfbEventAttendanceService;
 import com.rfb.service.dto.RfbEventAttendanceDTO;
 import com.rfb.service.mapper.RfbEventAttendanceMapper;
 import org.slf4j.Logger;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @Transactional
-public class RfbEventAttendanceServiceImpl implements RfbEventAttendanceService {
+public class RfbEventAttendanceServiceImpl implements RfbEventAttendanceService{
 
     private final Logger log = LoggerFactory.getLogger(RfbEventAttendanceServiceImpl.class);
 
@@ -46,10 +46,10 @@ public class RfbEventAttendanceServiceImpl implements RfbEventAttendanceService 
     }
 
     /**
-     * Get all the rfbEventAttendances.
+     *  Get all the rfbEventAttendances.
      *
-     * @param pageable the pagination information
-     * @return the list of entities
+     *  @param pageable the pagination information
+     *  @return the list of entities
      */
     @Override
     @Transactional(readOnly = true)
@@ -60,10 +60,10 @@ public class RfbEventAttendanceServiceImpl implements RfbEventAttendanceService 
     }
 
     /**
-     * Get one rfbEventAttendance by id.
+     *  Get one rfbEventAttendance by id.
      *
-     * @param id the id of the entity
-     * @return the entity
+     *  @param id the id of the entity
+     *  @return the entity
      */
     @Override
     @Transactional(readOnly = true)
@@ -74,9 +74,9 @@ public class RfbEventAttendanceServiceImpl implements RfbEventAttendanceService 
     }
 
     /**
-     * Delete the rfbEventAttendance by id.
+     *  Delete the  rfbEventAttendance by id.
      *
-     * @param id the id of the entity
+     *  @param id the id of the entity
      */
     @Override
     public void delete(Long id) {

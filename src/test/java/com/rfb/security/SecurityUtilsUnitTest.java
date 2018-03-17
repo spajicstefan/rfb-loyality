@@ -9,7 +9,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,8 +24,8 @@ public class SecurityUtilsUnitTest {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
         SecurityContextHolder.setContext(securityContext);
-        Optional<String> login = SecurityUtils.getCurrentUserLogin();
-        assertThat(login).contains("admin");
+        String login = SecurityUtils.getCurrentUserLogin();
+        assertThat(login).isEqualTo("admin");
     }
 
     @Test
@@ -53,11 +52,11 @@ public class SecurityUtilsUnitTest {
     public void testIsCurrentUserInRole() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
-        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("user", "user", authorities));
+        authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ORGANIZER));
+        securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("organizer", "organizer", authorities));
         SecurityContextHolder.setContext(securityContext);
 
-        assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)).isTrue();
+        assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ORGANIZER)).isTrue();
         assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)).isFalse();
     }
 

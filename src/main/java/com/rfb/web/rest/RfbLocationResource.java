@@ -2,11 +2,11 @@ package com.rfb.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.rfb.service.RfbLocationService;
-import com.rfb.web.rest.errors.BadRequestAlertException;
+import com.rfb.service.dto.RfbLocationDTO;
 import com.rfb.web.rest.util.HeaderUtil;
 import com.rfb.web.rest.util.PaginationUtil;
-import com.rfb.service.dto.RfbLocationDTO;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class RfbLocationResource {
     public ResponseEntity<RfbLocationDTO> createRfbLocation(@RequestBody RfbLocationDTO rfbLocationDTO) throws URISyntaxException {
         log.debug("REST request to save RfbLocation : {}", rfbLocationDTO);
         if (rfbLocationDTO.getId() != null) {
-            throw new BadRequestAlertException("A new rfbLocation cannot already have an ID", ENTITY_NAME, "idexists");
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new rfbLocation cannot already have an ID")).body(null);
         }
         RfbLocationDTO result = rfbLocationService.save(rfbLocationDTO);
         return ResponseEntity.created(new URI("/api/rfb-locations/" + result.getId()))
@@ -89,7 +88,7 @@ public class RfbLocationResource {
      */
     @GetMapping("/rfb-locations")
     @Timed
-    public ResponseEntity<List<RfbLocationDTO>> getAllRfbLocations(Pageable pageable) {
+    public ResponseEntity<List<RfbLocationDTO>> getAllRfbLocations(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of RfbLocations");
         Page<RfbLocationDTO> page = rfbLocationService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/rfb-locations");

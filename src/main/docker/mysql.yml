@@ -1,7 +1,7 @@
 version: '2'
 services:
     rfbloyalty-mysql:
-        image: mysql:5.7.20
+        image: mysql:5.7.19
         # volumes:
         #     - ~/volumes/jhipster/rfbloyalty/mysql/:/var/lib/mysql/
         environment:

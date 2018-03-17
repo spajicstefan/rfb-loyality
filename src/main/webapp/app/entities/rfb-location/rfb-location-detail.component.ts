@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs/Subscription';
-import { JhiEventManager } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs/Rx';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { RfbLocation } from './rfb-location.model';
-import { RfbLocationService } from './rfb-location.service';
+import {RfbLocation} from './rfb-location.model';
+import {RfbLocationService} from './rfb-location.service';
 
 @Component({
     selector: 'jhi-rfb-location-detail',
@@ -32,10 +31,9 @@ export class RfbLocationDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.rfbLocationService.find(id)
-            .subscribe((rfbLocationResponse: HttpResponse<RfbLocation>) => {
-                this.rfbLocation = rfbLocationResponse.body;
-            });
+        this.rfbLocationService.find(id).subscribe((rfbLocation) => {
+            this.rfbLocation = rfbLocation;
+        });
     }
     previousState() {
         window.history.back();

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { SERVER_API_URL } from '../../app.constants';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class JhiConfigurationService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: Http) {
     }
 
     get(): Observable<any> {
-        return this.http.get(SERVER_API_URL + 'management/configprops', { observe: 'response' }).map((res: HttpResponse<any>) => {
+        return this.http.get('management/configprops').map((res: Response) => {
             const properties: any[] = [];
 
-            const propertiesObject = res.body;
+            const propertiesObject = res.json();
 
             for (const key in propertiesObject) {
                 if (propertiesObject.hasOwnProperty(key)) {
@@ -29,10 +28,10 @@ export class JhiConfigurationService {
     }
 
     getEnv(): Observable<any> {
-        return this.http.get(SERVER_API_URL + 'management/env', { observe: 'response' }).map((res: HttpResponse<any>) => {
+        return this.http.get('management/env').map((res: Response) => {
             const properties: any = {};
 
-            const propertiesObject = res.body;
+            const propertiesObject = res.json();
 
             for (const key in propertiesObject) {
                 if (propertiesObject.hasOwnProperty(key)) {

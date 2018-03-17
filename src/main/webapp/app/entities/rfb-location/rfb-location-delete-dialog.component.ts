@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { RfbLocation } from './rfb-location.model';
-import { RfbLocationPopupService } from './rfb-location-popup.service';
-import { RfbLocationService } from './rfb-location.service';
+import {RfbLocation} from './rfb-location.model';
+import {RfbLocationPopupService} from './rfb-location-popup.service';
+import {RfbLocationService} from './rfb-location.service';
 
 @Component({
     selector: 'jhi-rfb-location-delete-dialog',
@@ -31,7 +31,7 @@ export class RfbLocationDeleteDialogComponent {
         this.rfbLocationService.delete(id).subscribe((response) => {
             this.eventManager.broadcast({
                 name: 'rfbLocationListModification',
-                content: 'Deleted an rfbLocation'
+                content: 'Deleted a Location'
             });
             this.activeModal.dismiss(true);
         });

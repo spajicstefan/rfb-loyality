@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs/Subscription';
-import { JhiEventManager } from 'ng-jhipster';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Subscription} from 'rxjs/Rx';
+import {JhiEventManager} from 'ng-jhipster';
 
-import { RfbEventAttendance } from './rfb-event-attendance.model';
-import { RfbEventAttendanceService } from './rfb-event-attendance.service';
+import {RfbEventAttendance} from './rfb-event-attendance.model';
+import {RfbEventAttendanceService} from './rfb-event-attendance.service';
 
 @Component({
     selector: 'jhi-rfb-event-attendance-detail',
@@ -32,10 +31,9 @@ export class RfbEventAttendanceDetailComponent implements OnInit, OnDestroy {
     }
 
     load(id) {
-        this.rfbEventAttendanceService.find(id)
-            .subscribe((rfbEventAttendanceResponse: HttpResponse<RfbEventAttendance>) => {
-                this.rfbEventAttendance = rfbEventAttendanceResponse.body;
-            });
+        this.rfbEventAttendanceService.find(id).subscribe((rfbEventAttendance) => {
+            this.rfbEventAttendance = rfbEventAttendance;
+        });
     }
     previousState() {
         window.history.back();

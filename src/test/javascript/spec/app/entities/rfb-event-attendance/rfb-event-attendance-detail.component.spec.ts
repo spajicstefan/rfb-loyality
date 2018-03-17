@@ -1,12 +1,15 @@
 /* tslint:disable max-line-length */
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-
-import { RfbloyaltyTestModule } from '../../../test.module';
-import { RfbEventAttendanceDetailComponent } from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance-detail.component';
-import { RfbEventAttendanceService } from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance.service';
-import { RfbEventAttendance } from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance.model';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {OnInit} from '@angular/core';
+import {DatePipe} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Rx';
+import {JhiDataUtils, JhiDateUtils, JhiEventManager} from 'ng-jhipster';
+import {RfbloyaltyTestModule} from '../../../test.module';
+import {MockActivatedRoute} from '../../../helpers/mock-route.service';
+import {RfbEventAttendanceDetailComponent} from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance-detail.component';
+import {RfbEventAttendanceService} from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance.service';
+import {RfbEventAttendance} from '../../../../../../main/webapp/app/entities/rfb-event-attendance/rfb-event-attendance.model';
 
 describe('Component Tests', () => {
 
@@ -20,10 +23,17 @@ describe('Component Tests', () => {
                 imports: [RfbloyaltyTestModule],
                 declarations: [RfbEventAttendanceDetailComponent],
                 providers: [
-                    RfbEventAttendanceService
+                    JhiDateUtils,
+                    JhiDataUtils,
+                    DatePipe,
+                    {
+                        provide: ActivatedRoute,
+                        useValue: new MockActivatedRoute({id: 123})
+                    },
+                    RfbEventAttendanceService,
+                    JhiEventManager
                 ]
-            })
-            .overrideTemplate(RfbEventAttendanceDetailComponent, '')
+            }).overrideTemplate(RfbEventAttendanceDetailComponent, '')
             .compileComponents();
         }));
 
@@ -35,18 +45,16 @@ describe('Component Tests', () => {
 
         describe('OnInit', () => {
             it('Should call load all on init', () => {
-                // GIVEN
+            // GIVEN
 
-                spyOn(service, 'find').and.returnValue(Observable.of(new HttpResponse({
-                    body: new RfbEventAttendance(123)
-                })));
+            spyOn(service, 'find').and.returnValue(Observable.of(new RfbEventAttendance(10)));
 
-                // WHEN
-                comp.ngOnInit();
+            // WHEN
+            comp.ngOnInit();
 
-                // THEN
-                expect(service.find).toHaveBeenCalledWith(123);
-                expect(comp.rfbEventAttendance).toEqual(jasmine.objectContaining({id: 123}));
+            // THEN
+            expect(service.find).toHaveBeenCalledWith(123);
+            expect(comp.rfbEventAttendance).toEqual(jasmine.objectContaining({id: 10}));
             });
         });
     });

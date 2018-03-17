@@ -2,11 +2,11 @@ package com.rfb.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.rfb.service.RfbEventAttendanceService;
-import com.rfb.web.rest.errors.BadRequestAlertException;
+import com.rfb.service.dto.RfbEventAttendanceDTO;
 import com.rfb.web.rest.util.HeaderUtil;
 import com.rfb.web.rest.util.PaginationUtil;
-import com.rfb.service.dto.RfbEventAttendanceDTO;
 import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class RfbEventAttendanceResource {
     public ResponseEntity<RfbEventAttendanceDTO> createRfbEventAttendance(@RequestBody RfbEventAttendanceDTO rfbEventAttendanceDTO) throws URISyntaxException {
         log.debug("REST request to save RfbEventAttendance : {}", rfbEventAttendanceDTO);
         if (rfbEventAttendanceDTO.getId() != null) {
-            throw new BadRequestAlertException("A new rfbEventAttendance cannot already have an ID", ENTITY_NAME, "idexists");
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new rfbEventAttendance cannot already have an ID")).body(null);
         }
         RfbEventAttendanceDTO result = rfbEventAttendanceService.save(rfbEventAttendanceDTO);
         return ResponseEntity.created(new URI("/api/rfb-event-attendances/" + result.getId()))
@@ -89,7 +88,7 @@ public class RfbEventAttendanceResource {
      */
     @GetMapping("/rfb-event-attendances")
     @Timed
-    public ResponseEntity<List<RfbEventAttendanceDTO>> getAllRfbEventAttendances(Pageable pageable) {
+    public ResponseEntity<List<RfbEventAttendanceDTO>> getAllRfbEventAttendances(@ApiParam Pageable pageable) {
         log.debug("REST request to get a page of RfbEventAttendances");
         Page<RfbEventAttendanceDTO> page = rfbEventAttendanceService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/rfb-event-attendances");
